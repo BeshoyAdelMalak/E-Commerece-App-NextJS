@@ -1,16 +1,13 @@
-
 import type { Product } from "@/app/(store)/types/product";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+// Provide a safe fallback URL if process.env.NEXT_PUBLIC_API_URL is undefined during build
+const API_URL = 
+  process.env.NEXT_PUBLIC_API_URL || "https://ecommerce.routemisr.com/api/v1";
 
 console.log("API URL:", API_URL);
 
 // Get All Products
 export async function getAllProducts(): Promise<Product[]> {
-  if (!API_URL) {
-    throw new Error("NEXT_PUBLIC_API_URL is missing from .env.local");
-  }
-
   try {
     const url = `${API_URL}/products`;
 
@@ -45,10 +42,6 @@ export interface Category {
 
 // Get All Categories
 export async function getCategories(): Promise<Category[]> {
-  if (!API_URL) {
-    throw new Error("NEXT_PUBLIC_API_URL is missing from .env.local");
-  }
-
   try {
     const url = `${API_URL}/categories`;
 
