@@ -29,3 +29,4 @@ export function dispatchAuthChange() {
     window.dispatchEvent(new Event("updateNavbarCounts"));
   }
 }
+

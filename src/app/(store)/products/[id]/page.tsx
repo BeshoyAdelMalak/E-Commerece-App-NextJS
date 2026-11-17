@@ -2,6 +2,8 @@
 import { notFound } from "next/navigation";
 import ProductDetailsClient from "./ProductDetailsClient";
 
+export const instant = false;
+
 interface Product {
   _id: string;
   title: string;

@@ -1,7 +1,9 @@
-
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+
+export const instant = false; 
 
 interface Brand {
   _id: string;
@@ -49,11 +51,8 @@ async function getBrandProducts(id: string): Promise<Product[]> {
   return result.data ?? [];
 }
 
-export default async function BrandDetailsPage({
-  params,
-}: PageProps) {
-  const { id } = await params;
-
+// 1. Isolated component that performs the data fetching using the id
+async function BrandContent({ id }: { id: string }) {
   const [brand, products] = await Promise.all([
     getBrand(id),
     getBrandProducts(id),
@@ -62,16 +61,10 @@ export default async function BrandDetailsPage({
   if (!brand) notFound();
 
   return (
-    <html>
-        <body>
-
-        
     <main className="min-h-screen bg-[#f8fafc]">
-
       {/* Header */}
       <section className="bg-gradient-to-r from-[#8738fa] to-[#bd73f5]">
         <div className="mx-auto max-w-[1600px] px-6 py-6 md:px-10 lg:px-16">
-
           <nav className="flex items-center gap-3 text-sm">
             <Link href="/" className="text-white/70 hover:text-white">
               Home
@@ -81,9 +74,7 @@ export default async function BrandDetailsPage({
               Brands
             </Link>
             <span className="text-white/50">/</span>
-            <span className="text-white font-medium">
-              {brand.name}
-            </span>
+            <span className="text-white font-medium">{brand.name}</span>
           </nav>
 
           <div className="flex items-center gap-5 py-10">
@@ -111,7 +102,6 @@ export default async function BrandDetailsPage({
 
       {/* Products Section */}
       <section className="mx-auto max-w-[1600px] px-6 py-12 md:px-10 lg:px-16">
-
         <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">
@@ -138,7 +128,6 @@ export default async function BrandDetailsPage({
           </div>
         ) : (
           <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-
             {products.map((product) => (
               <Link
                 href={`/products/${product._id}`}
@@ -158,10 +147,9 @@ export default async function BrandDetailsPage({
 
                 {/* Product Info */}
                 <div className="p-4">
-                  <h3 className="line-clamp-2 min-h-26 text-sm font-semibold text-gray-800 transition-colors group-hover:text-purple-600">
+                  <h3 className="line-clamp-2 min-h-[3.5rem] text-sm font-semibold text-gray-800 transition-colors group-hover:text-purple-600">
                     {product.title}
                   </h3>
-                  
 
                   <div className="mt-3 flex items-center justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
@@ -186,12 +174,20 @@ export default async function BrandDetailsPage({
                 </div>
               </Link>
             ))}
-
           </div>
         )}
       </section>
     </main>
-    </body>
-    </html>
+  );
+}
+
+// 2. Main Page Component that satisfies the cacheComponents model using Suspense
+export default async function BrandDetailsPage({ params }: PageProps) {
+  const { id } = await params;
+
+  return (
+    <Suspense fallback={<div className="p-12 text-center text-gray-500">Loading brand details...</div>}>
+      <BrandContent id={id} />
+    </Suspense>
   );
 }

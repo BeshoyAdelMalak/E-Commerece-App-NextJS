@@ -9,7 +9,9 @@ import {
   type NavbarCountsDetail,
 } from "./lib/navbar-events";
 
-export { updateNavbarCounts, dispatchAuthChange, type NavbarCountsDetail };
+// export { updateNavbarCounts, dispatchAuthChange, type NavbarCountsDetail };
+
+
 import {
   ShoppingCart,
   Search,

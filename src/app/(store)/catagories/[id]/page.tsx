@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+export const instant = false;
+
 interface Category {
   _id: string;
   name: string;
@@ -76,7 +78,6 @@ export default async function CategoryDetailsPage({
 
   return (
 
-    <html><body>
     <main className="min-h-screen bg-[#f8fafc]">
 
       {/* Header */}
@@ -227,7 +228,5 @@ export default async function CategoryDetailsPage({
 
       </section>
     </main>
-    </body>
-    </html>
   );
 }
